@@ -1,0 +1,558 @@
+openapi: 3.0.1
+info:
+  title: API Feria Virtual.
+  description: 'Esta API gestiona las peticiones de la aplicacion movil a la base
+    de datos de la feria virtual (https://feriavirtual-upqroo.ozelot.it) desarrollada
+    por estudiantes de la UNIVERSIDAD POLITECNICA DE QUINTANA ROO.  <br><br> <strong>Equipo
+    de desarrollo</strong>  <br><br> <strong>Backend (API Feria Virtual):</strong><br>
+    ALEXANDER GARCIA VIZCARRA <br> JOSE LUIS GUZMAN ORNELAS <br> <br> <strong>Frontend
+    (FLUTTER App Móvil):</strong><br> EDUARDO AGUSTIN LEAL PASTELIN<br> DIEGO ADOLFO
+    GUTIERREZ CATZIN<br> PEDRO ANGEL HU ROMERO<br> '
+  version: 1.0.0
+servers:
+- url: https://app-feria-virtual.herokuapp.com
+- url: https://feria-virtual-guz.herokuapp.com
+tags:
+- name: Universidad
+  description: Este endpoint maneja toda la informacion relacionada con las universidades.
+- name: users
+  description: Este endpoint maneja todas las peticiones de informacion del usuario
+    logueado.
+- name: auth
+  description: Este endpoint maneja todo lo relacionado con el manejo de sesion.
+paths:
+  /v1/universidad/:
+    get:
+      tags:
+      - Universidad
+      summary: Obtiene una lista de todas las universidades que tengan estado "APROBADO"
+        en el sitio web (feriavirtual-upqroo.ozelot.it).
+      operationId: v1UniversidadGET
+      responses:
+        "200":
+          description: Responde con un array de objetos con los datos de cada universidad
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/universidades'
+        "400":
+          description: "(Mensaje de error) Algun dato se envio de manera incorrecta,\
+            \ no paso la validacion u ocurrio un error al hacer la consulta."
+        "401":
+          description: (Inautorizado) Acceso restringido
+        "404":
+          description: (No encontrado) Pagina no encontrada
+        "500":
+          description: Error del servidor (Caida del servidor)
+      x-swagger-router-controller: Universidad
+  /v1/universidad/{IdUniversidad}:
+    get:
+      tags:
+      - Universidad
+      summary: Obtener los datos concretos de una universidad por ID
+      description: Product ID to remove
+      operationId: v1UniversidadIdUniversidadGET
+      parameters:
+      - name: IdUniversidad
+        in: path
+        description: "ID de la univeridad por defecto es un int(10) en la base de\
+          \ datos, se pasa como parametro para identificar a la universidad."
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/universidadByID'
+        "400":
+          description: "(Mensaje de error) Algun dato se envio de manera incorrecta,\
+            \ no paso la validacion u ocurrio un error al hacer la consulta."
+        "401":
+          description: (Inautorizado) Acceso restringido
+        "404":
+          description: (No encontrado) Pagina no encontrada
+        "500":
+          description: Error del servidor (Caida del servidor)
+      x-swagger-router-controller: Universidad
+  /usuario/:
+    post:
+      tags:
+      - users
+      summary: Permite comprobar si el token sigue valido y si existe el usuario al
+        que le corresponde.
+      operationId: usuarioPOST
+      parameters:
+      - name: x-auth-token
+        in: header
+        description: Token registrado debe incluir Content-Type application/json
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Validaciones correctas devuelme el mismo token para continuar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/x-acces-token'
+        "400":
+          description: "(Mensaje de error) Algun dato se envio de manera incorrecta,\
+            \ no paso la validacion u ocurrio un error al hacer la consulta."
+        "401":
+          description: (Inautorizado) Acceso restringido
+        "404":
+          description: (No encontrado) Pagina no encontrada
+        "500":
+          description: NO PASO LAS VALIDACIONES o simplemente Error del servidor (Caida
+            del servidor)
+      x-swagger-router-controller: Users
+  /v1/auth/signup/:
+    post:
+      tags:
+      - auth
+      summary: Registro de usuarios nuevos.
+      operationId: v1AuthSignupPOST
+      requestBody:
+        description: Esquema de la tabla Registrado de la feria virtual.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+        required: true
+      responses:
+        "201":
+          description: Se ha creado un nuevo usuario
+        "400":
+          description: "(Mensaje de error) Algun dato se envio de manera incorrecta,\
+            \ no paso la validacion u ocurrio un error al hacer la consulta."
+        "401":
+          description: (Inautorizado) Acceso restringido
+        "404":
+          description: (No encontrado) Pagina no encontrada
+        "500":
+          description: Error del servidor (Caida del servidor)
+      x-swagger-router-controller: Auth
+  /v1/auth/signin/:
+    post:
+      tags:
+      - auth
+      summary: Inicio de sesion para usuarios registrados.
+      operationId: v1AuthSigninPOST
+      requestBody:
+        description: Cuerpo que se manda en la solicitud para el login.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginbody'
+        required: true
+      responses:
+        "200":
+          description: Devuelve un token que expira en 20 minutos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/x-acces-token'
+        "400":
+          description: "(Mensaje de error) Algun dato se envio de manera incorrecta,\
+            \ no paso la validacion u ocurrio un error al hacer la consulta."
+        "401":
+          description: (Inautorizado) Acceso restringido
+        "404":
+          description: (No encontrado) Pagina no encontrada
+        "500":
+          description: Error del servidor (Caida del servidor)
+      x-swagger-router-controller: Auth
+  /v1/auth/verifyToken/:
+    post:
+      tags:
+      - auth
+      summary: Comprobar que token y usuario logueado sean validos.
+      operationId: v1AuthVerifyTokenPOST
+      parameters:
+      - name: x-auth-token
+        in: header
+        description: Token registrado debe incluir Content-Type application/json
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Respuesta correcta devuelve true
+          content:
+            application/json:
+              schema:
+                type: integer
+                x-content-type: application/json
+        "400":
+          description: "(Mensaje de error) Algun dato se envio de manera incorrecta,\
+            \ no paso la validacion u ocurrio un error al hacer la consulta."
+        "401":
+          description: (Inautorizado) Acceso restringido
+        "404":
+          description: (No encontrado) Pagina no encontrada
+        "500":
+          description: "Devuelve false si el token es invalido, ha expirado o no coincide\
+            \ con algun usuario registrado (tambien puede devolver este error si falla\
+            \ algun servicio durante la validacion)"
+          content:
+            application/json:
+              schema:
+                type: integer
+                x-content-type: application/json
+      x-swagger-router-controller: Auth
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        Nombre:
+          type: string
+          description: Nombres.
+          example: Jose
+        Apellido_P:
+          type: string
+          description: Apellido paterno.
+          example: Guzman
+        Apellido_M:
+          type: string
+          description: Apellido materno.
+          example: Ornelas
+        Correo_Electronico:
+          type: string
+          description: Correo electronico.
+          example: prueba@test.com
+        Telefono:
+          type: string
+          description: Telefono a 10 digitos.
+          example: "9981234567"
+        Motivo:
+          type: integer
+          description: (Debe ser numerico de una lista opciones (motivo de ingreso
+            a la universidad).
+          format: int64
+          example: 1
+        Escuela:
+          type: string
+          description: escuela de Procedencia.
+          example: CBTIS 272
+        Area_ID:
+          type: integer
+          description: Debe ser numerico de una lista de opciones (area de interes).
+          format: int64
+          example: 1
+        token:
+          type: string
+          description: Es un string vacio debe ser ingresado porque solo se usa para
+            trabajar la logica de registro en el front.
+          example: ""
+    loginbody:
+      type: object
+      properties:
+        Correo_Electronico:
+          type: string
+          description: Correo Electronico registrado.
+          example: correo@dominio.example
+    universidades:
+      type: array
+      items:
+        $ref: '#/components/schemas/universidades_inner'
+    universidadByID:
+      type: object
+      properties:
+        Universidad_ID:
+          type: integer
+          description: ID de la universidad (int(10))
+          format: int64
+          example: 1
+        Nombre:
+          type: string
+          description: Nombre de la universidad
+          example: UNIVERSIDAD POLITÉCNICA DE QUINTANA ROO
+        Ruta_Escudo:
+          type: string
+          description: Imagen para las miniaturas en la lista de universidades.
+          example: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/logos/1645805846.jpg
+        Telefono:
+          type: string
+          description: Numero de telefono de contacto de la universidad registrado
+          example: "9982831859"
+        Proceso_Admision:
+          type: string
+          description: Documento PDF con informacion del proceso de admision de la
+            universidad
+          example: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/admision/1645805767.pdf
+        Correo_Electronico:
+          type: string
+          description: Correo electronico de contacto de la universidad
+          example: prensaydifusion@upqroo.edu.mx
+        Tipo:
+          type: string
+          description: Tipo de universidad Publica/Privada (subconsulta).
+          example: Publica
+        Carreras:
+          type: array
+          description: Lista de los nombres de las carreras con sus recursos (PDF'S)
+          items:
+            $ref: '#/components/schemas/universidadByID_Carreras'
+        Videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/universidadByID_Videos'
+        Fotos:
+          type: array
+          items:
+            $ref: '#/components/schemas/universidadByID_Fotos'
+        Becas:
+          type: array
+          items:
+            $ref: '#/components/schemas/universidadByID_Becas'
+        url_Maps:
+          type: string
+          description: Ubicacion en google maps de la universidad
+          example: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.2810608072955!2d-86.90874868517736!3d21.180990987939953!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2c0162fb4071%3A0xc881c60dfcc845c!2sUniversidad%20Polit%C3%A9cnica%20de%20Quintana%20Roo!5e0!3m2!1ses-419!2smx!4v1645805240465!5m2!1ses-419!2smx
+        Direccion:
+          type: string
+          description: Direccion de la universidad registrada en el sitio web.
+          example: S/N 1119-33 AV. ARCO BICENTENARIO VISTA REAL II CANCÚN BENITO JU&AACUTE;REZ
+            77500
+        redesSociales:
+          type: array
+          items:
+            $ref: '#/components/schemas/universidadByID_redesSociales'
+      example:
+        Nombre: UNIVERSIDAD POLITÉCNICA DE QUINTANA ROO
+        Proceso_Admision: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/admision/1645805767.pdf
+        Fotos:
+        - Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Fotos/1646430800.jpg
+          Titulo: INSTALACIONES
+          Seccion_ID: 3
+        - Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Fotos/1646430800.jpg
+          Titulo: INSTALACIONES
+          Seccion_ID: 3
+        Becas:
+        - Nombre: BECAS INTERNAS
+          Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Becas/1646446230.pdf
+        - Nombre: BECAS INTERNAS
+          Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Becas/1646446230.pdf
+        redesSociales:
+        - Red_social: FACEBOOK
+          Recurso: https://www.facebook.com/upqroo
+        - Red_social: FACEBOOK
+          Recurso: https://www.facebook.com/upqroo
+        Ruta_Escudo: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/logos/1645805846.jpg
+        Videos:
+        - Recurso: https://www.youtube.com/watch?v=s9GuRtbE8E4
+          Titulo: VIDEO UPQROO
+          Seccion_ID: 1
+        - Recurso: https://www.youtube.com/watch?v=s9GuRtbE8E4
+          Titulo: VIDEO UPQROO
+          Seccion_ID: 1
+        Correo_Electronico: prensaydifusion@upqroo.edu.mx
+        Tipo: Publica
+        Carreras:
+        - Nombre: INGENIERÍA EN SOFTWARE
+          Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/carreras/1645810165.pdf
+        - Nombre: INGENIERÍA EN SOFTWARE
+          Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/carreras/1645810165.pdf
+        Universidad_ID: 1
+        Telefono: "9982831859"
+        Direccion: S/N 1119-33 AV. ARCO BICENTENARIO VISTA REAL II CANCÚN BENITO JU&AACUTE;REZ
+          77500
+        url_Maps: https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3720.2810608072955!2d-86.90874868517736!3d21.180990987939953!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2c0162fb4071%3A0xc881c60dfcc845c!2sUniversidad%20Polit%C3%A9cnica%20de%20Quintana%20Roo!5e0!3m2!1ses-419!2smx!4v1645805240465!5m2!1ses-419!2smx
+    x-acces-token:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token generado en el controlador auth con JWT
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIyLCJpYXQiOjE2NjAyOTAwNDEsImV4cCI6MTY2MDI5MTI0MX0.gixGdzfdHCrTBKB6JwH7kHh5OWI17oJuCakKCBdSCIA
+      example:
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIyLCJpYXQiOjE2NjAyOTAwNDEsImV4cCI6MTY2MDI5MTI0MX0.gixGdzfdHCrTBKB6JwH7kHh5OWI17oJuCakKCBdSCIA
+    universidades_inner:
+      type: object
+      properties:
+        Universidad_ID:
+          type: integer
+          description: ID de la universidad (int(10))
+          format: int64
+          example: 1
+        Nombre:
+          type: string
+          description: Nombre de la universidad
+          example: UNIVERSIDAD POLITÉCNICA DE QUINTANA ROO
+        Ruta_Escudo:
+          type: string
+          description: Imagen para las miniaturas en la lista de universidades.
+          example: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/logos/1645805846.jpg
+        Tipo:
+          type: string
+          description: Tipo de universidad Publica/Privada (subconsulta).
+          example: Publica
+        LICENCIATURA:
+          type: integer
+          description: Cantidad de licenciaturas registrados en la universidad
+          format: int64
+          example: 6
+        MAESTRIA:
+          type: integer
+          description: Cantidad de maestrias registrados en la universidad
+          format: int64
+          example: 0
+        DOCTORADO:
+          type: integer
+          description: Cantidad de doctorados registrados en la universidad
+          format: int64
+          example: 0
+        BECA:
+          type: integer
+          description: Cantidad de becas registradas en la universidad
+          format: int64
+          example: 1
+        area:
+          type: string
+          description: "Es una lista de areas separadas por coma, este campo fue descartado\
+            \ en produccion y en realidad no se usa actualmente para mostrar en la\
+            \ APP de la feria virtual, considere su eliminacion en la API y en sus\
+            \ correspondientes mapeos en el front (motivo -> algunas universidades\
+            \ no registran correctamente estos campos)."
+          example: "GESTIÓN,INGENIERÍA,GASTRONOMÍA,,NEGOCIOS ADMINISTRACIÓN, TURISMO"
+      example:
+        Nombre: UNIVERSIDAD POLITÉCNICA DE QUINTANA ROO
+        area: "GESTIÓN,INGENIERÍA,GASTRONOMÍA,,NEGOCIOS ADMINISTRACIÓN, TURISMO"
+        Tipo: Publica
+        LICENCIATURA: 6
+        Universidad_ID: 1
+        Ruta_Escudo: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/logos/1645805846.jpg
+        MAESTRIA: 0
+        BECA: 1
+        DOCTORADO: 0
+    universidadByID_Carreras:
+      type: object
+      properties:
+        Nombre:
+          type: string
+          description: Nombre de la carrera
+          example: INGENIERÍA EN SOFTWARE
+        Recurso:
+          type: string
+          description: PDF con informacion de la carrera
+          example: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/carreras/1645810165.pdf
+      example:
+        Nombre: INGENIERÍA EN SOFTWARE
+        Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/carreras/1645810165.pdf
+    universidadByID_Videos:
+      type: object
+      properties:
+        Seccion_ID:
+          type: integer
+          description: Se usa para identificar el recurso (video) en la base de datos  y
+            para mostrarlo en el sito correcto.
+          format: int64
+          example: 1
+        Titulo:
+          type: string
+          description: Titulo del video
+          example: VIDEO UPQROO
+        Recurso:
+          type: string
+          description: Link del recurso (video)
+          example: https://www.youtube.com/watch?v=s9GuRtbE8E4
+      description: "Lista de objetos con los videos disponibles de la universidad\
+        \ (seccion, titulo y recurso)"
+      example:
+        Recurso: https://www.youtube.com/watch?v=s9GuRtbE8E4
+        Titulo: VIDEO UPQROO
+        Seccion_ID: 1
+    universidadByID_Fotos:
+      type: object
+      properties:
+        Seccion_ID:
+          type: integer
+          description: Se usa para identificar el recurso (foto) en la base de datos
+            y para mostrarlo en el sito correcto.
+          format: int64
+          example: 3
+        Titulo:
+          type: string
+          description: Titulo de la imagen
+          example: INSTALACIONES
+        Recurso:
+          type: string
+          description: Link del recurso (imagen)
+          example: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Fotos/1646430800.jpg
+      description: "Lista de objetos con las fotos disponibles de la universidad (seccion,\
+        \ titulo y recurso)."
+      example:
+        Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Fotos/1646430800.jpg
+        Titulo: INSTALACIONES
+        Seccion_ID: 3
+    universidadByID_Becas:
+      type: object
+      properties:
+        Nombre:
+          type: string
+          description: Nombre de la beca
+          example: BECAS INTERNAS
+        Recurso:
+          type: string
+          description: Link de la beca (PDF)
+          example: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Becas/1646446230.pdf
+      description: Lista de objetos con los diferentes tipos de becas disponibles
+        (nombre y recurso)
+      example:
+        Nombre: BECAS INTERNAS
+        Recurso: https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/Becas/1646446230.pdf
+    universidadByID_redesSociales:
+      type: object
+      properties:
+        Red_social:
+          type: string
+          description: Nombre de la red social
+          example: FACEBOOK
+        Recurso:
+          type: string
+          description: Link del recurso (red social de la universidad)
+          example: https://www.facebook.com/upqroo
+      description: Lista de objetos con las diferentes redes sociales de la universidad.
+      example:
+        Red_social: FACEBOOK
+        Recurso: https://www.facebook.com/upqroo
+  responses:
+    Unauthorized:
+      description: (Inautorizado) Acceso restringido
+    NotFound:
+      description: (No encontrado) Pagina no encontrada
+    BadRequest:
+      description: "(Mensaje de error) Algun dato se envio de manera incorrecta, no\
+        \ paso la validacion u ocurrio un error al hacer la consulta."
+    ServerError:
+      description: Error del servidor (Caida del servidor)
+  parameters:
+    token:
+      name: x-auth-token
+      in: header
+      description: Token registrado debe incluir Content-Type application/json
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    IdUniversidad:
+      name: IdUniversidad
+      in: path
+      description: "ID de la univeridad por defecto es un int(10) en la base de datos,\
+        \ se pasa como parametro para identificar a la universidad."
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: integer
