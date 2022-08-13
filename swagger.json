@@ -15,6 +15,10 @@
   ],
   "tags": [
     {
+      "name": "TestVocacional",
+      "description": "Este endpoint se encarga de calcular los centiles de acuerdo a la puntuacion obtenida en el test en el front de la app web."
+    },
+    {
       "name": "Universidad",
       "description": "Este endpoint maneja toda la informacion relacionada con las universidades."
     },
@@ -28,7 +32,50 @@
     }
   ],
   "paths": {
-    "/v1/universidad/": {
+    "/v1/testvocacional": {
+      "post": {
+        "tags": [
+          "TestVocacional"
+        ],
+        "summary": "Calcula los centiles por area de los puntos obtenidos del test segun el rango de edad y el genero ingresado.",
+        "requestBody": {
+          "description": "Esquema de la tabla Registrado de la feria virtual.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/testRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/testResBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/v1/universidad": {
       "get": {
         "tags": [
           "Universidad"
@@ -36,7 +83,7 @@
         "summary": "Obtiene una lista de todas las universidades que tengan estado \"APROBADO\" en el sitio web (feriavirtual-upqroo.ozelot.it).",
         "responses": {
           "200": {
-            "description": "Responde con un array de objetos con los datos de cada universidad",
+            "description": "Responde con un array de objetos con los datos de cada universidad.",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,7 +112,7 @@
         "tags": [
           "Universidad"
         ],
-        "summary": "Obtener los datos concretos de una universidad por ID",
+        "summary": "Obtener los datos concretos de una universidad por ID.",
         "parameters": [
           {
             "$ref": "#/components/parameters/IdUniversidad"
@@ -98,8 +145,8 @@
         }
       }
     },
-    "/usuario/": {
-      "post": {
+    "/v1/usuario": {
+      "get": {
         "tags": [
           "users"
         ],
@@ -111,7 +158,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Validaciones correctas devuelme el mismo token para continuar",
+            "description": "Validaciones correctas devuelme el mismo token para continuar.",
             "content": {
               "application/json": {
                 "schema": {
@@ -130,12 +177,12 @@
             "$ref": "#/components/responses/NotFound"
           },
           "500": {
-            "description": "NO PASO LAS VALIDACIONES o simplemente Error del servidor (Caida del servidor)"
+            "description": "NO PASO LAS VALIDACIONES o simplemente Error del servidor (Caida del servidor)."
           }
         }
       }
     },
-    "/v1/auth/signup/": {
+    "/v1/auth/signup": {
       "post": {
         "tags": [
           "auth"
@@ -154,7 +201,7 @@
         },
         "responses": {
           "201": {
-            "description": "Se ha creado un nuevo usuario"
+            "description": "Responde con un mensaje de exito \"Se ha registrado con exito\"."
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -171,7 +218,7 @@
         }
       }
     },
-    "/v1/auth/signin/": {
+    "/v1/auth/signin": {
       "post": {
         "tags": [
           "auth"
@@ -214,7 +261,7 @@
         }
       }
     },
-    "/v1/auth/verifyToken/": {
+    "/v1/auth/verifyToken": {
       "post": {
         "tags": [
           "auth"
@@ -582,6 +629,161 @@
             "type": "string",
             "description": "Token generado en el controlador auth con JWT",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTIyLCJpYXQiOjE2NjAyOTAwNDEsImV4cCI6MTY2MDI5MTI0MX0.gixGdzfdHCrTBKB6JwH7kHh5OWI17oJuCakKCBdSCIA"
+          }
+        }
+      },
+      "testResBody": {
+        "type": "object",
+        "properties": {
+          "aireLibre": {
+            "type": "integer",
+            "format": "int64",
+            "example": 25,
+            "description": "Centil calculado del area \"Aire Libre\""
+          },
+          "mecanica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 85,
+            "description": "Centil calculado del area \"Mecanica\""
+          },
+          "calculo": {
+            "type": "integer",
+            "format": "int64",
+            "example": 90,
+            "description": "Centil calculado del area \"Calculo\""
+          },
+          "ciencia": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35,
+            "description": "Centil calculado del area \"Cientifica\""
+          },
+          "persuasiva": {
+            "type": "integer",
+            "format": "int64",
+            "example": 60,
+            "description": "Centil calculado del area \"Persuasiva\""
+          },
+          "artes": {
+            "type": "integer",
+            "format": "int64",
+            "example": 30,
+            "description": "Centil calculado del area \"Artes\""
+          },
+          "linguistica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 60,
+            "description": "Centil calculado del area \"Literaria\""
+          },
+          "musica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 25,
+            "description": "Centil calculado del area \"Musica\""
+          },
+          "social": {
+            "type": "integer",
+            "format": "int64",
+            "example": 20,
+            "description": "Centil calculado del area \"Social\""
+          },
+          "administrativa": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35,
+            "description": "Centil calculado del area \"Administrativa\""
+          },
+          "areas": {
+            "type": "object",
+            "properties": {
+              "area1": {
+                "type": "integer",
+                "description": "Indice del area de mayor puntaje (indice desde 0)",
+                "example": 2
+              },
+              "area2": {
+                "type": "integer",
+                "description": "Indice de la segunda area de mayor puntaje (indice desde 0)",
+                "example": 1
+              }
+            }
+          }
+        }
+      },
+      "testRequest": {
+        "type": "object",
+        "properties": {
+          "aireLibre": {
+            "type": "integer",
+            "format": "int64",
+            "example": 25,
+            "description": "Centil calculado del area \"Aire Libre\""
+          },
+          "mecanica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 33,
+            "description": "Centil calculado del area \"Mecanica\""
+          },
+          "calculo": {
+            "type": "integer",
+            "format": "int64",
+            "example": 32,
+            "description": "Centil calculado del area \"Calculo\""
+          },
+          "ciencia": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35,
+            "description": "Centil calculado del area \"Cientifica\""
+          },
+          "persuasiva": {
+            "type": "integer",
+            "format": "int64",
+            "example": 39,
+            "description": "Centil calculado del area \"Persuasiva\""
+          },
+          "artes": {
+            "type": "integer",
+            "format": "int64",
+            "example": 26,
+            "description": "Centil calculado del area \"Artes\""
+          },
+          "linguistica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 22,
+            "description": "Centil calculado del area \"Literaria\""
+          },
+          "musica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 12,
+            "description": "Centil calculado del area \"Musica\""
+          },
+          "social": {
+            "type": "integer",
+            "format": "int64",
+            "example": 40,
+            "description": "Centil calculado del area \"Social\""
+          },
+          "administrativa": {
+            "type": "integer",
+            "format": "int64",
+            "example": 48,
+            "description": "Centil calculado del area \"Administrativa\""
+          },
+          "grupoEdad": {
+            "type": "integer",
+            "example": 1,
+            "description": "Rango de edad que seleccionamos al momento de hacer el test (en base a esto pueden cambiar los resultados de los centiles)."
+          },
+          "genero": {
+            "type": "integer",
+            "example": 1,
+            "description": "Genero seleccionado al momento de hacer el test (influye en el primer rango de edad)."
           }
         }
       }
