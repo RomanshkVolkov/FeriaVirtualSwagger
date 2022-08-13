@@ -39,7 +39,7 @@
         ],
         "summary": "Calcula los centiles por area de los puntos obtenidos del test segun el rango de edad y el genero ingresado.",
         "requestBody": {
-          "description": "Esquema de la tabla Registrado de la feria virtual.",
+          "description": "Cuerpo de la peticion post para calcular el centil del test vocacional.",
           "required": true,
           "content": {
             "application/json": {
