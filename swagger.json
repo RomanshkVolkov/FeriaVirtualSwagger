@@ -719,61 +719,61 @@
             "type": "integer",
             "format": "int64",
             "example": 25,
-            "description": "Centil calculado del area \"Aire Libre\""
+            "description": "Puntaje obtenido para el area \"Aire Libre\""
           },
           "mecanica": {
             "type": "integer",
             "format": "int64",
             "example": 33,
-            "description": "Centil calculado del area \"Mecanica\""
+            "description": "Puntaje obtenido para el area \"Mecanica\""
           },
           "calculo": {
             "type": "integer",
             "format": "int64",
             "example": 32,
-            "description": "Centil calculado del area \"Calculo\""
+            "description": "Puntaje obtenido para el area \"Calculo\""
           },
           "ciencia": {
             "type": "integer",
             "format": "int64",
             "example": 35,
-            "description": "Centil calculado del area \"Cientifica\""
+            "description": "Puntaje obtenido para el area \"Cientifica\""
           },
           "persuasiva": {
             "type": "integer",
             "format": "int64",
             "example": 39,
-            "description": "Centil calculado del area \"Persuasiva\""
+            "description": "Puntaje obtenido para el area \"Persuasiva\""
           },
           "artes": {
             "type": "integer",
             "format": "int64",
             "example": 26,
-            "description": "Centil calculado del area \"Artes\""
+            "description": "Puntaje obtenido para el area \"Artes\""
           },
           "linguistica": {
             "type": "integer",
             "format": "int64",
             "example": 22,
-            "description": "Centil calculado del area \"Literaria\""
+            "description": "Puntaje obtenido para el area \"Literaria\""
           },
           "musica": {
             "type": "integer",
             "format": "int64",
             "example": 12,
-            "description": "Centil calculado del area \"Musica\""
+            "description": "Puntaje obtenido para el area \"Musica\""
           },
           "social": {
             "type": "integer",
             "format": "int64",
             "example": 40,
-            "description": "Centil calculado del area \"Social\""
+            "description": "Puntaje obtenido para el area \"Social\""
           },
           "administrativa": {
             "type": "integer",
             "format": "int64",
             "example": 48,
-            "description": "Centil calculado del area \"Administrativa\""
+            "description": "Puntaje obtenido para el area \"Administrativa\""
           },
           "grupoEdad": {
             "type": "integer",
