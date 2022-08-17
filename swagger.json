@@ -632,86 +632,6 @@
           }
         }
       },
-      "testResBody": {
-        "type": "object",
-        "properties": {
-          "aireLibre": {
-            "type": "integer",
-            "format": "int64",
-            "example": 25,
-            "description": "Centil calculado del area \"Aire Libre\""
-          },
-          "mecanica": {
-            "type": "integer",
-            "format": "int64",
-            "example": 85,
-            "description": "Centil calculado del area \"Mecanica\""
-          },
-          "calculo": {
-            "type": "integer",
-            "format": "int64",
-            "example": 90,
-            "description": "Centil calculado del area \"Calculo\""
-          },
-          "ciencia": {
-            "type": "integer",
-            "format": "int64",
-            "example": 35,
-            "description": "Centil calculado del area \"Cientifica\""
-          },
-          "persuasiva": {
-            "type": "integer",
-            "format": "int64",
-            "example": 60,
-            "description": "Centil calculado del area \"Persuasiva\""
-          },
-          "artes": {
-            "type": "integer",
-            "format": "int64",
-            "example": 30,
-            "description": "Centil calculado del area \"Artes\""
-          },
-          "linguistica": {
-            "type": "integer",
-            "format": "int64",
-            "example": 60,
-            "description": "Centil calculado del area \"Literaria\""
-          },
-          "musica": {
-            "type": "integer",
-            "format": "int64",
-            "example": 25,
-            "description": "Centil calculado del area \"Musica\""
-          },
-          "social": {
-            "type": "integer",
-            "format": "int64",
-            "example": 20,
-            "description": "Centil calculado del area \"Social\""
-          },
-          "administrativa": {
-            "type": "integer",
-            "format": "int64",
-            "example": 35,
-            "description": "Centil calculado del area \"Administrativa\""
-          },
-          "areas": {
-            "type": "object",
-            "properties": {
-              "area1": {
-                "type": "integer",
-                "description": "Indice del area de mayor puntaje (indice desde 0)",
-                "example": 2
-              },
-              "area2": {
-                "type": "integer",
-                "description": "Indice de la segunda area de mayor puntaje (indice desde 0)",
-                "example": 1
-              }
-            }
-          }
-        }
-      },
       "testRequest": {
         "type": "object",
         "properties": {
@@ -784,6 +704,130 @@
             "type": "integer",
             "example": 1,
             "description": "Genero seleccionado al momento de hacer el test (influye en el primer rango de edad)."
+          }
+        }
+      },
+      "testResBody": {
+        "type": "object",
+        "properties": {
+          "aireLibre": {
+            "type": "integer",
+            "format": "int64",
+            "example": 25,
+            "description": "Centil calculado del area \"Aire Libre\""
+          },
+          "mecanica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 85,
+            "description": "Centil calculado del area \"Mecanica\""
+          },
+          "calculo": {
+            "type": "integer",
+            "format": "int64",
+            "example": 90,
+            "description": "Centil calculado del area \"Calculo\""
+          },
+          "ciencia": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35,
+            "description": "Centil calculado del area \"Cientifica\""
+          },
+          "persuasiva": {
+            "type": "integer",
+            "format": "int64",
+            "example": 60,
+            "description": "Centil calculado del area \"Persuasiva\""
+          },
+          "artes": {
+            "type": "integer",
+            "format": "int64",
+            "example": 30,
+            "description": "Centil calculado del area \"Artes\""
+          },
+          "linguistica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 60,
+            "description": "Centil calculado del area \"Literaria\""
+          },
+          "musica": {
+            "type": "integer",
+            "format": "int64",
+            "example": 25,
+            "description": "Centil calculado del area \"Musica\""
+          },
+          "social": {
+            "type": "integer",
+            "format": "int64",
+            "example": 20,
+            "description": "Centil calculado del area \"Social\""
+          },
+          "administrativa": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35,
+            "description": "Centil calculado del area \"Administrativa\""
+          },
+          "universidades": {
+            "type": "array",
+            "items": {
+              "description": "Es una lista de las universidades relacionadas a las dos areas de mayor puntaje",
+              "type": "object",
+              "properties": {
+                "Universidad_ID": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "ID de la universidad (int(10))",
+                  "example": 9
+                },
+                "Nombre": {
+                  "type": "string",
+                  "description": "Nombre de la universidad",
+                  "example": "UNIVERSIDAD NAVAL"
+                },
+                "Ruta_Escudo": {
+                  "type": "string",
+                  "description": "Imagen para las miniaturas en la lista de universidades.",
+                  "example": "https://feriavirtual-upqroo.ozelot.it/SeccionAdministrativa/docs_Unis/logos/1644602265.jpg"
+                },
+                "Tipo": {
+                  "type": "string",
+                  "description": "Tipo de universidad Publica/Privada (subconsulta).",
+                  "example": "Publica"
+                },
+                "LICENCIATURA": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Cantidad de licenciaturas registrados en la universidad",
+                  "example": 1
+                },
+                "MAESTRIA": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Cantidad de maestrias registrados en la universidad",
+                  "example": 1
+                },
+                "DOCTORADO": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Cantidad de doctorados registrados en la universidad",
+                  "example": 0
+                },
+                "BECA": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Cantidad de becas registradas en la universidad",
+                  "example": 0
+                },
+                "area": {
+                  "type": "string",
+                  "description": "Es una lista de areas separadas por coma, este campo fue   descartado en produccion y en realidad no se usa actualmente para   mostrar en la APP de la feria virtual, considere su eliminacion en la API y en sus correspondientes mapeos en el front (motivo -> algunas universidades no registran correctamente estos campos).",
+                  "example": "NA"
+                }
+              }
+            }
           }
         }
       }
